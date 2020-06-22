@@ -1,10 +1,15 @@
 import React from "react";
 
 function Login() {
+
+    function handleSubmit(event){
+        alert("submitted"+event)
+        event.preventDefault();
+    }
   return (
     <div>
       <p>Please Login</p>
-      <form>
+      <form  onSubmit={handleSubmit}>
         <label>
           Name:
           <input type="text" name="name" />
