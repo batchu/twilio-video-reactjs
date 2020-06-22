@@ -1,5 +1,5 @@
 import React from "react";
-import "../App.css";
+import "./Room.css";
 
 
 function Room(props) {
@@ -9,13 +9,19 @@ function Room(props) {
     <li>{name}</li>
   )
   return (
-    <div className="App">
-      <p>Welcome to the room</p>
+    <div>
       <div>
-        <div>Video area</div>
-        <div>
-          <ol>{participantsItems}</ol>
+        <div>Welcome to {participants[0]}'s room</div>
+      <div className="wrapper">
+        <div className="video">
+          <p>Video</p>
         </div>
+        <div className="attendees">
+          <p>Attendees</p>
+          <ul>{participantsItems}</ul>
+        </div>
+      </div>
+        
       </div>
     </div>
   );
