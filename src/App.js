@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
-import Login from './components/Login.js';
+//import Login from './components/Login.js';
+import Room from './components/Room.js';
 
 function App() {
   return (
     <div className="App">
-      <Login />
+      <Room  name= 'Pooja' />
     </div>
   );
 }
