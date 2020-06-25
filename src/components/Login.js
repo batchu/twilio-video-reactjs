@@ -4,12 +4,14 @@ import axios from 'axios';
 
 function Login() {
 
-  const [login, setLogin] = useState({ login: false });
-  const [room, setName] = useState({ room: "" });
-  const [token, setToken] = useState({ token: "" });
+  const [login, setLogin] = useState(false);
+  const [room, setRoom] = useState("");
+  const [token, setToken] = useState("");
+  const [participant, setParticipant] = useState("");
   
   function handleSubmit(event) {
-    setName(event.target[0].value)
+    setRoom(event.target[0].value)  
+    setParticipant(event.target[1].value)
     axios.post("https://video.twilio.com/v1/Rooms",
       `UniqueName=${room}`,
       {
@@ -26,7 +28,8 @@ function Login() {
         if (resp.status === 201){
 
           //Get an access token
-          axios.get("https://ube-zebra-9736.twil.io/AccessTokens")
+          const url = `https://ube-zebra-9736.twil.io/AccessTokens?room=${room}&participant=${participant}`
+          axios.get(url)
           .then(function (resp){
             console.log(resp.status)
             if (resp.status === 200){
