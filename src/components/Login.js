@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import Room from "./Room.js"
-import axios from 'axios';
+import axios from 'axios'
 
 function Login() {
 
-  const [login, setLogin] = useState(false);
-  const [room, setRoom] = useState("");
-  const [token, setToken] = useState("");
-  const [participant, setParticipant] = useState("");
+  const [login, setLogin] = useState(false)
+  const [room, setRoom] = useState("")
+  const [token, setToken] = useState("")
+  const [participant, setParticipant] = useState("")
   
   function handleSubmit(event) {
-    setRoom(event.target[0].value)  
-    setParticipant(event.target[1].value)
+    const room = event.target[0].value
+    const participant = event.target[1].value
+    setRoom(room)  
+    setParticipant(participant)
     axios.post("https://video.twilio.com/v1/Rooms",
       `UniqueName=${room}`,
       {
