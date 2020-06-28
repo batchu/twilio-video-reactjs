@@ -6,13 +6,16 @@ const { connect } = require('twilio-video');
 
 function Room(props) {
 
-  const [participants, setParticipants] = useState({ participants: [] });
+  const [participants, setParticipants] = useState([]);
 
   const {room, participant, token} = props
 
   connect(token, { roomName:room }).then(room => {
     console.log(`Successfully joined a Room: ${room}`);
-    room.participants.forEach(participantConnected)
+    room.participants.forEach((p)=>{
+      console.log(p.identity)
+      setParticipants(participants.concat(p.identity))
+      })
 
   }, error => {
     console.error(`Unable to connect to Room: ${error.message}`);
@@ -20,7 +23,7 @@ function Room(props) {
 
   function participantConnected(participant) {
     console.log('Participant "%s" connected', participant.identity);
-  
+   
     const div = document.createElement('div');
     div.id = participant.sid;
     div.innerText = participant.identity;
