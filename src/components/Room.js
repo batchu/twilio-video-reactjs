@@ -6,15 +6,19 @@ const { connect } = require('twilio-video');
 
 function Room(props) {
 console.log(`In the Room component. Connecting to Room ${props.room} for participant ${props.participant}`)
-  const [participants, setParticipants] = useState([]);
+const [participants, setParticipants] = useState([]);
+const [localParticipant, setLocalParticipant] = useState({});
+const [localTrack, setLocalTrack] = useState([<div></div>]);
 
   const {room, participant, token} = props
 
   connect(token, { roomName:room }).then(room => {
     console.log(`Successfully joined a Room: ${room}`);
+
+  document.getElementById("localVideo").appendChild(room.localParticipant.videoTracks.values().next().value.track.attach())
     room.participants.forEach((p)=>{
       console.log(p.identity)
-      setParticipants(participants.concat(p.identity))
+      participantConnected(p)
       })
 
   }, error => {
@@ -36,8 +40,8 @@ console.log(`In the Room component. Connecting to Room ${props.room} for partici
         trackSubscribed(div, publication.track);
       }
     });
-  
-    document.body.appendChild(div);
+   document.getElementById("remoteParticipants").appendChild(div)
+    
     // participants.push(`<div id=${participant.identity}>${participant.identity}</div>`)
   }
   function trackUnsubscribed(track) {
@@ -54,10 +58,12 @@ console.log(`In the Room component. Connecting to Room ${props.room} for partici
       <div className="wrapper">
         <div className="video">
           <p>Video</p>
+  <div id ="localVideo">{localTrack}</div>
         </div>
         <div className="attendees">
-          <p>Participants</p>
-          <div>{participants}</div>
+          <p> Local Participant</p>
+          <p>Remote Participants</p>
+          <div id ="remoteParticipants"></div>
         </div>
       </div>
       </div>
