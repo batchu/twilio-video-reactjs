@@ -9,10 +9,11 @@ function Login() {
   const [token, setToken] = useState("")
   const [participant, setParticipant] = useState("")
   
-  function handleSubmit(event) {
+  function handleCreateRoomEvt(event) {
     const room = event.target[0].value
     const participant = event.target[1].value
     setRoom(room)  
+    console.log(`Creating a room - ${room} with participant ${participant}`)
     setParticipant(participant)
     axios.post("https://video.twilio.com/v1/Rooms",
       `UniqueName=${room}`,
@@ -28,26 +29,48 @@ function Login() {
       .then(function (resp) {
         console.log(resp.status)
         if (resp.status === 201){
+          console.log(`Successfully created a room`)
 
-          //Get an access token
-          const url = `https://ube-zebra-9736.twil.io/AccessTokens?room=${room}&participant=${participant}`
-          axios.get(url)
-          .then(function (resp){
-            console.log(resp.status)
-            if (resp.status === 200){
-              const token = resp.data
-              setToken(token)
-              setLogin(true)
-            }
-        })
+          requestAccessToken(room, participant)
         }
       })
       .catch(function (err) {
+        alert(`Error ${err.response.data.code}: ${err.response.data.message}`)
         console.error(err)
       })
 
     
     
+    event.preventDefault();
+  }
+
+  function requestAccessToken(room, participant){
+      setRoom(room)  
+    //Get an access token
+   console.log(`Padding a random string to participant name for testing`)
+  //  const newParticipantName = participant+Math.random().toString(36).substring(4);
+    setParticipant(participant)
+    const url = `https://ube-zebra-9736.twil.io/AccessTokens?room=${room}&participant=${participant}`
+    console.log(`Requesting an Auth token for the participant ${participant}`)
+    axios.get(url)
+    .then(function (resp){
+      console.log(resp.status)
+      if (resp.status === 200){
+        console.log(`Successfully retrieved the auth token for participant ${participant}. Token value is ${resp.data}`)
+        console.log(`Setting login state attr to true. Loading the Room component`)
+        const token = resp.data.token
+        setToken(token)
+        setLogin(true)
+      }
+  })
+  }
+
+  function handleJoinRoomEvt(event){
+
+    const room = event.target[0].value
+    const participant = event.target[1].value
+
+    requestAccessToken(room, participant)
     event.preventDefault();
   }
 
@@ -59,7 +82,7 @@ function Login() {
     return (
     <div>
       <p>Let's create a new meeting and join you in!</p>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleCreateRoomEvt}>
         <label>
           Room Name:
         <input type="text" name="room" />
@@ -72,7 +95,7 @@ function Login() {
       </form>
     <div>
       <p>Already created a meeting? Join Now</p>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleJoinRoomEvt}>
         <label>
           Room Name:
         <input type="text" name="room" />

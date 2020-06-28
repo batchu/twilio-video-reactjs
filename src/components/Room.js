@@ -5,7 +5,7 @@ const { connect } = require('twilio-video');
 
 
 function Room(props) {
-
+console.log(`In the Room component. Connecting to Room ${props.room} for participant ${props.participant}`)
   const [participants, setParticipants] = useState([]);
 
   const {room, participant, token} = props
@@ -62,7 +62,7 @@ function Room(props) {
       </div>
       </div>
     </div>
-  );
+  )
 }
 
 
