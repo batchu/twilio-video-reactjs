@@ -1,26 +1,52 @@
 import React, { useState } from "react"
 import Room from "./Room.js"
 import axios from 'axios'
-
+import {useParams} from 'react-router-dom'
+import appConfig from '../Config.js'
 function Login() {
 
+  const {room, participant} = useParams()
+  console.log(`The following info was pass through the URL - room: ${room} and participant: ${participant}`)
   const [login, setLogin] = useState(false)
-  const [room, setRoom] = useState("")
   const [token, setToken] = useState("")
-  const [participant, setParticipant] = useState("")
+
+
+  function checkIfRoomExists(room, participant){
+
+    axios.get(`https://video.twilio.com/v1/Rooms/${room}`,
+    {
+      auth: {
+        username: appConfig.username,
+        password: appConfig.password
+      },
+    })
+    .then(function (resp){
+      if(resp.status===200){
+        console.log(`room ${room} exists!`)
+       if(token==="")
+        requestAccessToken(room, participant)
+       else
+        setLogin(true)
+        
+      }
+      
+    })
+    .catch(function (resp){
+      console.log(`room ${room} doesn't exist. Creating it...`)
+      createRoom(room, participant)
+    })
+  }
   
-  function handleCreateRoomEvt(event) {
-    const room = event.target[0].value
-    const participant = event.target[1].value
-    setRoom(room)  
+  function createRoom(room, participant) {
+
     console.log(`Creating a room - ${room} with participant ${participant}`)
-    setParticipant(participant)
+
     axios.post("https://video.twilio.com/v1/Rooms",
       `UniqueName=${room}`,
       {
         auth: {
-          username: window.Config.username,
-          password: window.Config.password
+          username: appConfig.username,
+          password: appConfig.password
         },
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -29,8 +55,7 @@ function Login() {
       .then(function (resp) {
         console.log(resp.status)
         if (resp.status === 201){
-          console.log(`Successfully created a room`)
-
+          console.log(`Successfully created the room ${room}`)
           requestAccessToken(room, participant)
         }
       })
@@ -38,18 +63,14 @@ function Login() {
         alert(`Error ${err.response.data.code}: ${err.response.data.message}`)
         console.error(err)
       })
-
-    
-    
-    event.preventDefault();
   }
 
   function requestAccessToken(room, participant){
-      setRoom(room)  
+
     //Get an access token
    console.log(`Padding a random string to participant name for testing`)
   //  const newParticipantName = participant+Math.random().toString(36).substring(4);
-    setParticipant(participant)
+
     const url = `https://ube-zebra-9736.twil.io/AccessTokens?room=${room}&participant=${participant}`
     console.log(`Requesting an Auth token for the participant ${participant}`)
     axios.get(url)
@@ -58,20 +79,10 @@ function Login() {
       if (resp.status === 200){
         console.log(`Successfully retrieved the auth token for participant ${participant}. Token value is ${resp.data}`)
         console.log(`Setting login state attr to true. Loading the Room component`)
-        const token = resp.data.token
-        setToken(token)
-        setLogin(true)
+         setToken(resp.data.token)
+     
       }
   })
-  }
-
-  function handleJoinRoomEvt(event){
-
-    const room = event.target[0].value
-    const participant = event.target[1].value
-
-    requestAccessToken(room, participant)
-    event.preventDefault();
   }
 
   if (login === true) {
@@ -81,32 +92,8 @@ function Login() {
   else
     return (
     <div>
-      <p>Let's create a new meeting and join you in!</p>
-      <form onSubmit={handleCreateRoomEvt}>
-        <label>
-          Room Name:
-        <input type="text" name="room" />
-        </label>
-        <label>
-          Your Name:
-        <input type="text" name="participant" />
-        </label>
-        <input type="submit" value="Create a room" />
-      </form>
-    <div>
-      <p>Already created a meeting? Join Now</p>
-      <form onSubmit={handleJoinRoomEvt}>
-        <label>
-          Room Name:
-        <input type="text" name="room" />
-        </label>
-        <label>
-          Your Name:
-        <input type="text" name="participant" />
-        </label>
-        <input type="submit" value="Join my room" />
-      </form>
-    </div>
+      <p>Checking if the room {room} exists. Please wait...</p>
+      {checkIfRoomExists(room, participant)}
     </div>
     )
 
