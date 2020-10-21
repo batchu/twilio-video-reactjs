@@ -11,6 +11,9 @@ function Home(){
           
          </li>
          <li>
+         <Link to ="/hello">Hello</Link>
+         </li>
+         <li>
          <Link to ="/video/room/someRoom/participant/someParticipant">Join a test room</Link>
          </li>
        </ul>

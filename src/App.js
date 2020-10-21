@@ -2,11 +2,11 @@ import React from 'react';
 import './App.css';
 import Login from './components/Login.js';
 import Home from './components/Home.js';
+import Hello from './components/Hello.js';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 function App() {
@@ -17,6 +17,9 @@ function App() {
         <Route path="/video/room/:room/participant/:participant" children={<Login />}/>
         <Route path="/home">
           <Home />
+        </Route>
+        <Route path="/hello">
+          <Hello />
         </Route>
         <Route path="">
           <Home />
