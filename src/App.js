@@ -13,16 +13,6 @@ function App() {
   return (
     <Router>
      <div>
-<h2> Navigation</h2>
-       <ul>
-         <li>
-           <Link to ="/home">Home</Link>
-          
-         </li>
-         <li>
-         <Link to ="/video/room/someRoom/participant/someParticipant">Join a test room</Link>
-         </li>
-       </ul>
      <Switch>
         <Route path="/video/room/:room/participant/:participant" children={<Login />}/>
         <Route path="/home">
