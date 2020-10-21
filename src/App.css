@@ -1,8 +1,6 @@
 .wrapper,
 html,
 body {
-  height: 100%;
-  margin: 10px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 12px;
 }
@@ -11,14 +9,8 @@ body {
   max-width:1000px;
    display:flex;
    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 2rem;
-    border: 1px solid #d3d3d3;
+    margin:10px 0 0 10px
 }
-.video video{
-  flex-basis: 480px;
-  padding: 2rem;
-  border: 1px solid #d3d3d3;
-  flex-grow:1;
-  margin: 0 2rem 2rem 2rem;
+.video{
+  margin: 0 0 10px 5px;
 }

@@ -22,14 +22,6 @@ function Room(props) {
           .next()
           .value.track.attach()
       );
-//display local participant name
-      const div = document.createElement("div");
-    div.id = room.localParticipant.sid
-    div.innerText = room.localParticipant.identity;
-
-      document.getElementById("localParticipant").appendChild(
-        div
-      );
 
 //remote participants
       room.participants.forEach(p => {
@@ -79,7 +71,6 @@ function Room(props) {
 
     const div = document.createElement("div");
     div.id = participant.sid;
-    div.innerText = participant.identity;
 
     participant.on("trackSubscribed", track => trackSubscribed(div, track));
     participant.on("trackUnsubscribed", trackUnsubscribed);
@@ -103,25 +94,17 @@ function Room(props) {
   }
 
   return (
-    <div>
-      <div>
-        <div>Welcome to {room}'s room</div>
+
+
         <div className="wrapper">
-          <div className="video">
-            <p>Video</p>
-            <div id="localVideo"></div>
+          <div className="video-grid">
+            <div id="localVideo" className="video"></div>
+            <div id="remoteParticipants" className="video"></div>
           </div>
-          <div className="attendees">
-            <div id = "localParticipant">
-            <p> Local Participant</p>
-            </div>
-            
-            <p>Remote Participants</p>
-            <div id="remoteParticipants"></div>
-          </div>
+ 
         </div>
-      </div>
-    </div>
+
+
   );
 }
 
